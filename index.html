@@ -12,7 +12,7 @@
                 scroll-margin-top: 50px;
             }
             nav {
-                backdrop-filter: blur(0.5rem);
+                background-color: #fff;
             }
             #foto {
                 background: transparent url("https://picsum.photos/id/152/800/600?blur=8") 0 0 no-repeat;
@@ -181,10 +181,44 @@
                 const data = await consulta.json();
                 var donde = document.querySelector("#trabajos");
                 data.forEach(function (t, i) {
-                    donde.innerHTML +=
-                        `<article class="col"><div class="card h-100 shadow-sm ${t.soporte}"><img src="${t.fotos[0]}" class="card-img-top"><div class="card-body"><h3 class="fs-5"><a href="single.html?nro=${i}" class="link-secondary">${t.nombre}</a></h3><p>${t.abstract}</p><small>#${t.soporte}</small></div></div></article>`;
-                });
-            }
+                    // Genera un identificador único para el modal
+        const modalId = `portfolioModal${i}`;
+
+        // Agrega un atributo "data-bs-target" al elemento que apunta al modal
+        donde.innerHTML +=
+            `<article class="col">
+                <div class="card h-100 shadow-sm ${t.soporte}">
+                    <img src="${t.fotos[0]}" class="card-img-top">
+                    <div class="card-body">
+                        <h3 class="fs-5" data-bs-toggle="modal" data-bs-target="#${modalId}" class="link-secondary">${t.nombre}</h3>
+                        <p>${t.abstract}</p>
+                        <small>#${t.soporte}</small>
+                    </div>
+                </div>
+            </article>`;
+            // Agrega el modal correspondiente
+        donde.innerHTML += `
+            <div class="modal fade" id="${modalId}" tabindex="-1" role="dialog" aria-labelledby="${modalId}Label" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="${modalId}Label">${t.nombre}</h5>
+                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Cerrar">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Contenido del modal aquí -->
+                            <p>${t.descripcion}</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+    });
+}
             portfolio().catch((error) => console.error(error));
         </script>
         <!-- Lo que sigue es la biblioteca de Bootstrap-->
